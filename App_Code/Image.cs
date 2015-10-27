@@ -1,12 +1,12 @@
 ﻿using System;
 
-/// <summary>image(id, uri, rank)</summary>
+/// <summary>image(id, uri, caption)</summary>
 public class Image {
 
     public Guid id { get; set; }
     //public Uri uri { get; set; } // System.Uri cannot be serialized because it does not have a parameterless constructor.
     public string uri { get; set; }
-    public int rank { get; set; }
+    //public int rank { get; set; }
     public string caption { get; set; }
     // forego empty attribute ... can be determined from 
     // the state of id or uri which are required for 
@@ -29,8 +29,6 @@ public class Image {
                 // output parameter(s)
                 cmd.Parameters.Add("@uri", System.Data.SqlDbType.NVarChar, 255);
                 cmd.Parameters["@uri"].Direction = System.Data.ParameterDirection.Output;
-                cmd.Parameters.Add("@rank", System.Data.SqlDbType.Int);
-                cmd.Parameters["@rank"].Direction = System.Data.ParameterDirection.Output;
                 cmd.Parameters.Add("@caption", System.Data.SqlDbType.NVarChar, 50);
                 cmd.Parameters["@caption"].Direction = System.Data.ParameterDirection.Output;
                 // open and execute
@@ -38,7 +36,6 @@ public class Image {
                 if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
                     this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString());
                     this.uri = cmd.Parameters["@uri"].Value.ToString(); // new Uri(cmd.Parameters["@uri"].Value.ToString());
-                    this.rank = (int)cmd.Parameters["@uri"].Value;
                     this.caption = cmd.Parameters["@caption"].Value.ToString();
                 }
             }
@@ -59,9 +56,6 @@ public class Image {
                     cmd.Parameters.Add("@uri", System.Data.SqlDbType.NVarChar, 255);
                     cmd.Parameters["@uri"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@uri"].Value = i.uri;
-                    cmd.Parameters.Add("@rank", System.Data.SqlDbType.Int);
-                    cmd.Parameters["@rank"].Direction = System.Data.ParameterDirection.Input;
-                    cmd.Parameters["@rank"].Value = i.rank;
                     cmd.Parameters.Add("@caption", System.Data.SqlDbType.NVarChar, 50);
                     cmd.Parameters["@caption"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@caption"].Value = i.caption;
@@ -90,9 +84,6 @@ public class Image {
                     cmd.Parameters.Add("@uri", System.Data.SqlDbType.NVarChar, 255);
                     cmd.Parameters["@uri"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@uri"].Value = i.uri;
-                    cmd.Parameters.Add("@rank", System.Data.SqlDbType.Int);
-                    cmd.Parameters["@rank"].Direction = System.Data.ParameterDirection.Input;
-                    cmd.Parameters["@rank"].Value = i.rank;
                     cmd.Parameters.Add("@caption", System.Data.SqlDbType.NVarChar, 50);
                     cmd.Parameters["@caption"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@caption"].Value = i.caption;
