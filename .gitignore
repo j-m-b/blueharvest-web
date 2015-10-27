@@ -194,3 +194,8 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+## configuration file(s) ##
+[Ww]eb.config
+[Ww]eb.[Dd]ebug.config
+*.exclude

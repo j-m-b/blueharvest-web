@@ -10,7 +10,6 @@ public partial class _Default : System.Web.UI.Page {
 
         // from godaddy hosted db instance
         message.Text += "<br />" + DateTime.Now + " godaddy db:" + getTestById(Guid.Parse("F584BD9B-AF95-4BA2-9B6A-47B29FF3C8A1"));
-
     }
 
     protected string getTestById(Guid id) {
