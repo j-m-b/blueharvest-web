@@ -6,10 +6,13 @@ public partial class _Default : System.Web.UI.Page {
         message.Text += "Hello World!";
 
         // from aws rds db instance
-        message.Text += "<br />" + DateTime.Now + " aws rds db: " + new User("jamie").email;
+        //message.Text += "<br />" + DateTime.Now + " aws rds db: " + new User("jamie").email;
 
         // from godaddy hosted db instance
-        message.Text += "<br />" + DateTime.Now + " godaddy db:" + getTestById(Guid.Parse("F584BD9B-AF95-4BA2-9B6A-47B29FF3C8A1"));
+        //message.Text += "<br />" + DateTime.Now + " godaddy db:" + getTestById(Guid.Parse("F584BD9B-AF95-4BA2-9B6A-47B29FF3C8A1"));
+
+        //Image.Delete(new Guid("78290B3C-B687-4191-8E1A-F781646C04F6"));
+
     }
 
     protected string getTestById(Guid id) {

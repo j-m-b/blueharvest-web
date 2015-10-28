@@ -15,7 +15,6 @@ public class Image {
     public Image() { }
 
     public Image(Guid id) {
-        // todo: test
         using (System.Data.SqlClient.SqlConnection c =
             new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
             ConnectionStrings["blueharvest-rds"].ConnectionString)) {
@@ -43,7 +42,6 @@ public class Image {
     }
 
     public static bool? Insert(Image i) {
-        // todo: test
         try {
             using (System.Data.SqlClient.SqlConnection c =
                new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
@@ -69,7 +67,6 @@ public class Image {
     }
 
     public static bool? Update(Image i) {
-        // todo: test
         try {
             using (System.Data.SqlClient.SqlConnection c =
                new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
@@ -97,7 +94,6 @@ public class Image {
     }
 
     public static bool? Delete(Guid id) {
-        // todo: test
         try {
             using (System.Data.SqlClient.SqlConnection c =
                new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
@@ -108,12 +104,13 @@ public class Image {
                     // input parameter(s)
                     cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
                     cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Input;
-                    cmd.Parameters["@id"].Value = id.ToString(); // strictly for where clause
+                    cmd.Parameters["@id"].Value = id; // strictly for where clause
                     c.Open(); cmd.ExecuteNonQuery();  // open and execute
                 }
             }
             return true;
-        } catch { // the insert failed somehow (duplicate uri, sql error, etc.)
+        } catch (Exception e) { // the delete failed somehow (sql error, etc.)
+            //System.Diagnostics.Debug.WriteLine(e.Message);
             return false;
         }
     }
