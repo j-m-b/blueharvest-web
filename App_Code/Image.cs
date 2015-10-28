@@ -33,8 +33,8 @@ public class Image {
                 cmd.Parameters["@caption"].Direction = System.Data.ParameterDirection.Output;
                 // open and execute
                 c.Open(); cmd.ExecuteNonQuery();
-                if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
-                    this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString());
+                if (!Convert.IsDBNull(cmd.Parameters["@uri"].Value)) { // there exists a db image
+                    this.id = id;
                     this.uri = cmd.Parameters["@uri"].Value.ToString(); // new Uri(cmd.Parameters["@uri"].Value.ToString());
                     this.caption = cmd.Parameters["@caption"].Value.ToString();
                 }
