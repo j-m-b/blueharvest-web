@@ -7,6 +7,16 @@ using System.Web;
 public class Geocache {
 
     public Guid id { get; set; }
+    public DateTime anniversary { get; set; }
+    public string name { get; set; }
+    public string description { get; set; }
+    public int difficulty { get; set; }
+    public int terrain { get; set; }
+    public int size { get; set; }
+    public int status { get; set; }
+    public Guid userid { get; set; }
+    public double latitude { get; set; }
+    public double longitude { get; set; }
 
     public Geocache() {
        // todo: get from db table
