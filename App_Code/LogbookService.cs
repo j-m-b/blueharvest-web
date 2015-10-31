@@ -38,4 +38,17 @@ public class LogbookService {
         }
     }
 
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? InsertLogbookEntry(string title, string text, Guid userid, Guid logbookid) {
+        if (sc != null && sc.isValid()) {
+            LogbookEntry e = new LogbookEntry();
+            e.title = title;
+            e.text = text;
+            return LogbookEntry.Insert(e, userid, logbookid);
+        } else {
+            return null;
+        }
+    }
+
 }
