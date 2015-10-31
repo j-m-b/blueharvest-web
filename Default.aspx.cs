@@ -13,6 +13,13 @@ public partial class _Default : System.Web.UI.Page {
 
         //Image.Delete(new Guid("78290B3C-B687-4191-8E1A-F781646C04F6"));
 
+        /*LogbookEntry le = new LogbookEntry();
+        le.title = "title";
+        le.text = "text";
+        Guid userid = Guid.Parse("1A64A1A1-2F3E-404B-86CF-25507CD74EC0");
+        Guid logbookid = Guid.Parse("E32FE75A-DB0D-4DC7-AE89-E3FF6C72BAA8");
+        message.Text += "<br />" + LogbookEntry.Insert(le, userid, logbookid);*/
+
     }
 
     protected string getTestById(Guid id) {

@@ -64,7 +64,7 @@ public class LogbookEntry {
                     cmd.Parameters["@userid"].Value = userid;
                     cmd.Parameters.Add("@logbookid", System.Data.SqlDbType.UniqueIdentifier);
                     cmd.Parameters["@logbookid"].Direction = System.Data.ParameterDirection.Input;
-                    cmd.Parameters["@logbookid"].Value = userid;
+                    cmd.Parameters["@logbookid"].Value = logbookid;
                     c.Open(); cmd.ExecuteNonQuery();  // open and execute
                 }
             }
