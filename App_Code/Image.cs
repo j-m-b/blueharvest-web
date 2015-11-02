@@ -109,7 +109,7 @@ public class Image {
                 }
             }
             return true;
-        } catch (Exception e) { // the delete failed somehow (sql error, etc.)
+        } catch /*(Exception e)*/ { // the delete failed somehow (sql error, etc.)
             //System.Diagnostics.Debug.WriteLine(e.Message);
             return false;
         }

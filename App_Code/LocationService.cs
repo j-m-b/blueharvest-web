@@ -19,6 +19,16 @@ public class LocationService {
 
     [WebMethod]
     [SoapHeader("sc")]
+    public Location GetLocationByCoordinates(double latitude, double longitude) {
+        if (sc != null && sc.isValid()) {
+            return new Location(latitude, longitude);
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
     public bool? InsertLocation(Location l) {
         if (sc != null && sc.isValid()) {
             return Location.Insert(l);

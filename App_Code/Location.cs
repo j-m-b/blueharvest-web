@@ -50,6 +50,46 @@ public class Location {
         }
     }
 
+    /// <summary>getLocationByCoordinates stored procedure</summary>
+    /// <param name="latitude"></param>
+    /// <param name="longitude"></param>
+    public Location(double latitude, double longitude) {
+        using (System.Data.SqlClient.SqlConnection c =
+          new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+          ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.getLocationByCoordinates", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@latitude", System.Data.SqlDbType.Decimal, 10);
+                cmd.Parameters["@latitude"].Precision = 10;
+                cmd.Parameters["@latitude"].Scale = 7;
+                cmd.Parameters["@latitude"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@latitude"].Value = latitude;
+                cmd.Parameters.Add("@longitude", System.Data.SqlDbType.Decimal, 10);
+                cmd.Parameters["@longitude"].Precision = 10;
+                cmd.Parameters["@longitude"].Scale = 7;
+                cmd.Parameters["@longitude"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@longitude"].Value = longitude;
+                // output parameter(s)
+                cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@altitude", System.Data.SqlDbType.Int);
+                cmd.Parameters["@altitude"].Direction = System.Data.ParameterDirection.Output;
+                // open and execute
+                c.Open(); cmd.ExecuteNonQuery();
+                if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
+                    this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString());
+                    this.latitude = Convert.ToDouble(cmd.Parameters["@latitude"].Value);
+                    this.longitude = Convert.ToDouble(cmd.Parameters["@longitude"].Value);
+                    this.altitude = (int)cmd.Parameters["@altitude"].Value;
+                } else { // no result
+                    // what to do??
+                }
+            }
+        }
+    }
+
     /// <summary>insertLocation stored procedure</summary>
     /// <param name="l"></param>
     /// <returns></returns>
