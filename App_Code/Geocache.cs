@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 /// <summary>geocache(id, ...)</summary>
 public class Geocache {
@@ -123,7 +120,7 @@ public class Geocaches : System.Collections.ArrayList {
          new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
          ConnectionStrings["blueharvest-rds"].ConnectionString)) {
             using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
-                "blueharvest.dbo.getLogbookEntriesWithUserByLogbookId", c)) {
+                "blueharvest.dbo.getGeocachesWithinDistance", c)) {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 // input parameter(s)
                 cmd.Parameters.Add("@minlatrad", System.Data.SqlDbType.Decimal, 20);
@@ -170,17 +167,17 @@ public class Geocaches : System.Collections.ArrayList {
                             g.anniversary = Convert.ToDateTime(r["anniversary"]);
                             g.name = r["name"].ToString();
                             g.description = r["description"].ToString();
-                            g.difficulty = (int)r["difficulty"];
-                            g.terrain = (int)r["terrain"];
-                            g.size = (int)r["size"];
-                            g.status = (int)r["status"];
-                            g.type = (int)r["type"];
+                            g.difficulty = Convert.IsDBNull(r["difficulty"]) ? 0 : (int)r["difficulty"];
+                            g.terrain = Convert.IsDBNull(r["terrain"]) ? 0 : (int)r["terrain"];
+                            g.size = Convert.IsDBNull(r["size"]) ? 0 : (int)r["size"];
+                            g.status = Convert.IsDBNull(r["status"]) ? 0 : (int)r["status"];
+                            g.type = Convert.IsDBNull(r["type"]) ? 0 : (int)r["type"];
                             // location
                             g.location = new Location();
                             g.location.id = Guid.Parse(r["locationid"].ToString());
-                            g.location.latitude = (double)r["latitude"];
-                            g.location.longitude = (double)r["longatude"];
-                            g.location.altitude = (int)r["altitude"];
+                            g.location.latitude = Convert.ToDouble(r["latitude"]);
+                            g.location.longitude = Convert.ToDouble(r["longitude"]);
+                            g.location.altitude = Convert.IsDBNull(r["altitude"]) ? 0 : (int)r["altitude"];
                             // user
                             g.user = new User();
                             g.user.id = Guid.Parse(r["userid"].ToString());
