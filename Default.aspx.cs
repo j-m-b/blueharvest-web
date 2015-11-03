@@ -20,11 +20,13 @@ public partial class _Default : System.Web.UI.Page {
         Guid logbookid = Guid.Parse("E32FE75A-DB0D-4DC7-AE89-E3FF6C72BAA8");
         message.Text += "<br />" + LogbookEntry.Insert(le, userid, logbookid);*/
 
-       /* LogbookEntries l = new LogbookEntries(Guid.Parse("E32FE75A-DB0D-4DC7-AE89-E3FF6C72BAA8"));
-        message.Text += "<br />" + l.Count;
-        for (int i = 0; i < l.Count - 1; i++) {
-           message.Text += "<br />" + ((LogbookEntry) l[i]).title;
-        }*/
+        /* LogbookEntries l = new LogbookEntries(Guid.Parse("E32FE75A-DB0D-4DC7-AE89-E3FF6C72BAA8"));
+         message.Text += "<br />" + l.Count;
+         for (int i = 0; i < l.Count - 1; i++) {
+            message.Text += "<br />" + ((LogbookEntry) l[i]).title;
+         }*/
+
+        //Geocache.Insert(new Geocache(), 0, 0);
 
     }
 
