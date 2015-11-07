@@ -9,9 +9,14 @@ public class DatabaseService {
 
     [WebMethod]
     [SoapHeader("sc")]
-    public bool? DeleteAll() {
+    public bool? DeleteAll(string username, string password) {
         if (sc != null && sc.isValid()) {
-            return Database.DeleteAll();
+            User u = new User(username);
+            if (PasswordHash.PasswordHash.ValidatePassword(u.salt + password, u.password) && u.role.name.Equals("Admin") && !u.locked && u.active) {
+                return Database.DeleteAll();
+            } else {
+                return null;
+            }
         } else {
             return null;
         }

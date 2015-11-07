@@ -1,7 +1,7 @@
 ﻿using System;
 
 /// <summary>
-/// user(id, username, password, salt, email, salt, active) Database Object
+/// user(id, username, password, salt, email, salt, active, locked, roleid) Database Object
 /// </summary>
 public class User {
 
@@ -14,10 +14,66 @@ public class User {
     public string email { get; set; }
     public bool active { get; set; }
     public bool locked { get; set; }
+    public Role role { get; set; }
     //todo: image, etc.
     public bool empty { get; set; } // web service specific
 
     public User() { }
+    
+    /// <summary>getUserByUsernameAndPassword stored procedure todo: test</summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    public User(string username, string password) {
+        //User u = new User(username);
+        using (System.Data.SqlClient.SqlConnection c =    
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.getUserByUsernameAndPassword", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@username", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@username"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@username"].Value = username;
+                cmd.Parameters.Add("@password", System.Data.SqlDbType.NVarChar, 255);
+                cmd.Parameters["@password"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@password"].Value = password; // PasswordHash.PasswordHash.ValidatePassword(u.salt + password, u.password)
+                // output parameter(s)
+                cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@anniversary", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@anniversary"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@salt", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@salt"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@email", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@email"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@active", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@active"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@locked", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@locked"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@roleid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@roleid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@rolename", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@rolename"].Direction = System.Data.ParameterDirection.Output;
+                // open and execute
+                c.Open(); cmd.ExecuteNonQuery();
+                if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
+                    this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString());
+                    this.anniversary = Convert.ToDateTime(cmd.Parameters["@anniversary"].Value).ToUniversalTime();
+                    this.username = username;
+                    //this.password = cmd.Parameters["@password"].Value.ToString();
+                    //this.salt = Guid.Parse(cmd.Parameters["@salt"].Value.ToString());
+                    this.email = cmd.Parameters["@email"].Value.ToString();
+                    this.active = Convert.ToBoolean(cmd.Parameters["@active"].Value);
+                    this.locked = Convert.ToBoolean(cmd.Parameters["@locked"].Value);
+                    this.role = new Role(Guid.Parse(cmd.Parameters["@roleid"].Value.ToString()),
+                        cmd.Parameters["@rolename"].Value.ToString());
+                } else { // no result
+                    this.empty = true;
+                }
+            }
+        }
+    }
 
     /// <summary>getUserByUsername stored procedure</summary>
     /// <param name="username"></param>
@@ -47,6 +103,10 @@ public class User {
                 cmd.Parameters["@active"].Direction = System.Data.ParameterDirection.Output;
                 cmd.Parameters.Add("@locked", System.Data.SqlDbType.Bit);
                 cmd.Parameters["@locked"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@roleid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@roleid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@rolename", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@rolename"].Direction = System.Data.ParameterDirection.Output;
                 // open and execute
                 c.Open(); cmd.ExecuteNonQuery();
                 if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
@@ -58,8 +118,17 @@ public class User {
                     this.email = cmd.Parameters["@email"].Value.ToString();
                     this.active = Convert.ToBoolean(cmd.Parameters["@active"].Value);
                     this.locked = Convert.ToBoolean(cmd.Parameters["@locked"].Value);
+                    this.role = new Role(Guid.Parse(cmd.Parameters["@roleid"].Value.ToString()), cmd.Parameters["@rolename"].Value.ToString());
                 } else { // no result
                     this.empty = true;
+                    this.id = new Guid();
+                    this.anniversary = new DateTime();
+                    this.username = null;
+                    this.password = null;
+                    this.salt = new Guid();
+                    this.email = null;
+                    this.active = false;
+                    this.locked = true;
                 }
             }
         }
