@@ -182,12 +182,14 @@ public class User {
     }
 
     /// <summary>
+    /// insertUser stored procedure
     /// Inserts user(id, anniversary, username, password, salt, email, active, locked)
     /// into the database using the blueharvest.dbo.insertUser stored procedure.
     /// id and anniversary have default values in the user table definition and are 
     /// not required nor are used. The password in the user object parameter at this state
     /// is a clear text string consisting of any combination of characters, symbols, or numbers.
     /// A salt is created and hashed with the password and must not exceed 255 Unicode characters.
+    /// Role id is based on role name.
     /// </summary>
     /// <param name="u"></param>
     /// <returns></returns>
@@ -221,6 +223,9 @@ public class User {
                     cmd.Parameters.Add("@locked", System.Data.SqlDbType.Bit);
                     cmd.Parameters["@locked"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@locked"].Value = u.locked;
+                    cmd.Parameters.Add("@rolename", System.Data.SqlDbType.NVarChar, 50);
+                    cmd.Parameters["@rolename"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@rolename"].Value = u.role.name;
                     c.Open(); cmd.ExecuteNonQuery();  // open and execute
                 }
             }
