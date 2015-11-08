@@ -37,12 +37,20 @@ public partial class _Default : System.Web.UI.Page {
         lat: 0.7101613303072252
         lng: -1.2923203528995262
         */
-        Geocaches g = new Geocaches(
+        /*Geocaches g = new Geocaches(
             0.7076499545598947, 0.7126727060545557,
             -1.295632394429061, -1.2890083113699913,
             0.7101613303072252, -1.2923203528995262, 16d);
-        message.Text += "<br />" + g.Count;
- 
+        message.Text += "<br />" + g.Count;*/
+
+        /*User u = new User();
+        u.username = "test";
+        u.password = "password";
+        u.email = "test@test.com";
+        u.active = true;
+        u.locked = false;
+        u.role = new Role(Guid.NewGuid(), "Basic");
+        global::User.Insert(u);*/
     }
 
     protected string getTestById(Guid id) {

@@ -26,6 +26,32 @@ public class UserService {
         }
     }
 
+    /// <summary>
+    /// for use when sending complexTypes is not feasible due to time constraints
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="email"></param>
+    /// <param name="rolename"></param>
+    /// <returns></returns>
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? InsertSimpleUser(string username, string password, string email, string rolename) {
+        if (sc != null && sc.isValid()) {
+            User u = new User();
+            u.username = username;
+            u.password = password;
+            u.email = email;
+            u.active = true;
+            u.locked = false;
+            u.role = new Role();
+            u.role.name = rolename;
+            return User.Insert(u);
+        } else {
+            return null;
+        }
+    }
+
     [WebMethod]
     [SoapHeader("sc")]
     public bool? UpdateUser(User u) {
