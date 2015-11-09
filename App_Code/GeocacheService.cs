@@ -19,7 +19,6 @@ public class GeocacheService {
     }
     */
 
-    /*
     [WebMethod]
     [SoapHeader("sc")]
     public bool? InsertGeocache(Geocache g) {
@@ -29,8 +28,8 @@ public class GeocacheService {
             return null;
         }
     }
-    */
 
+    /*
     [WebMethod]
     [SoapHeader("sc")]
     public bool? InsertGeocacheWithLocation(Geocache g, double latitude, double longitude) {
@@ -40,6 +39,7 @@ public class GeocacheService {
             return null;
         }
     }
+    */
 
     /*
     [WebMethod]

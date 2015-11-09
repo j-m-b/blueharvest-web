@@ -26,8 +26,57 @@ public class Geocache {
     public Geocache(Guid id) { /* todo */ }
 
     public static bool? Insert(Geocache g) {
-        // todo: insert into db table
-        return false;
+        try {
+            using (System.Data.SqlClient.SqlConnection c =
+               new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+               ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                    "blueharvest.dbo.insertGeocacheWithLocationAndLogbook", c)) {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    // input parameter(s)
+                    // id = newid()
+                    // anniversary = sysutcdatetime()
+                    cmd.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 50);
+                    cmd.Parameters["@name"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@name"].Value = g.name;
+                    cmd.Parameters.Add("@description", System.Data.SqlDbType.NVarChar, -1);
+                    cmd.Parameters["@description"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@description"].Value = g.description;
+                    cmd.Parameters.Add("@difficulty", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@difficulty"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@difficulty"].Value = g.difficulty;
+                    cmd.Parameters.Add("@terrain", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@terrain"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@terrain"].Value = g.terrain;
+                    cmd.Parameters.Add("@size", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@size"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@size"].Value = g.size;
+                    cmd.Parameters.Add("@status", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@status"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@status"].Value = g.status;
+                    cmd.Parameters.Add("@type", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@type"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@type"].Value = g.type;
+                    cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                    cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@userid"].Value = g.user.id;
+                    cmd.Parameters.Add("@latitude", System.Data.SqlDbType.Decimal, 10);
+                    cmd.Parameters["@latitude"].Precision = 10;
+                    cmd.Parameters["@latitude"].Scale = 7;
+                    cmd.Parameters["@latitude"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@latitude"].Value = g.location.latitude;
+                    cmd.Parameters.Add("@longitude", System.Data.SqlDbType.Decimal, 10);
+                    cmd.Parameters["@longitude"].Precision = 10;
+                    cmd.Parameters["@longitude"].Scale = 7;
+                    cmd.Parameters["@longitude"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@longitude"].Value = g.location.longitude;
+                    c.Open(); cmd.ExecuteNonQuery();  // open and execute
+                }
+            }
+            return true;
+        } catch { // the insert failed somehow (duplicate parameters, sql error, etc.)
+            return false;
+        }
     }
 
     /// <summary>
