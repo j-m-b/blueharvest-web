@@ -70,6 +70,9 @@ public class Geocache {
                     cmd.Parameters["@longitude"].Scale = 7;
                     cmd.Parameters["@longitude"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@longitude"].Value = g.location.longitude;
+                    cmd.Parameters.Add("@altitude", System.Data.SqlDbType.Int);
+                    cmd.Parameters["@altitude"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@altitude"].Value = g.location.altitude;
                     c.Open(); cmd.ExecuteNonQuery();  // open and execute
                 }
             }
