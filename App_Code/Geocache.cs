@@ -346,6 +346,10 @@ public class Geocaches : System.Collections.ArrayList {
                             g.user.id = Guid.Parse(r["userid"].ToString());
                             g.user.username = r["username"].ToString();
                             g.user.email = r["email"].ToString();
+                            // user role
+                            g.user.role = new Role();
+                            g.user.role.id = Guid.Parse(r["roleid"].ToString());
+                            g.user.role.name = r["rolename"].ToString();
                             // logbook
                             g.logbook = new Logbook();
                             g.logbook.id = Guid.Parse(r["logbookid"].ToString());
