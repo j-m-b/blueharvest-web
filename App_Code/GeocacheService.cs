@@ -7,7 +7,6 @@ public class GeocacheService {
 
     public ServiceCredentials sc;
 
-    /*
     [WebMethod]
     [SoapHeader("sc")]
     public Geocache GetGeocache(Guid id) {
@@ -17,7 +16,6 @@ public class GeocacheService {
             return null;
         }
     }
-    */
 
     [WebMethod]
     [SoapHeader("sc")]
