@@ -8,8 +8,8 @@ public class UserService {
 
     [WebMethod]
     [SoapHeader("sc")]
-    public User GetUser(string username) {
-        if (sc != null && sc.isValid()) {
+    public User GetUser(string username, string password) {
+        if (sc != null && sc.isValid() && (bool)AuthUser(username, password)) {
             return new User(username);
         } else {
             return null;
