@@ -23,7 +23,7 @@ public class User {
     /// <summary>getUserByUsernameAndPassword stored procedure todo: test</summary>
     /// <param name="username"></param>
     /// <param name="password"></param>
-    public User(string username, string password) {
+    /*public User(string username, string password) {
         //User u = new User(username);
         using (System.Data.SqlClient.SqlConnection c =    
             new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
@@ -73,7 +73,7 @@ public class User {
                 }
             }
         }
-    }
+    }*/
 
     /// <summary>getUserByUsername stored procedure</summary>
     /// <param name="username"></param>

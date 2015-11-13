@@ -10,7 +10,11 @@ public class UserService {
     [SoapHeader("sc")]
     public User GetUser(string username, string password) {
         if (sc != null && sc.isValid() && (bool)AuthUser(username, password)) {
-            return new User(username);
+            User u = new User(username);
+            // we're not gonna send this back :)
+            u.password = password;
+            u.salt = new System.Guid();
+            return u; //new User(username);
         } else {
             return null;
         } 
@@ -55,7 +59,7 @@ public class UserService {
     [WebMethod]
     [SoapHeader("sc")]
     public bool? UpdateUser(User u) {
-        if (sc != null && sc.isValid()) {
+        if (sc != null && sc.isValid() && (bool)AuthUser(u.username, u.password)) {
             return User.Update(u);
         } else {
             return null;
@@ -67,7 +71,7 @@ public class UserService {
     public bool? AuthUser(string username, string password) {
         if (sc != null && sc.isValid()) { // soap header credentials
             User u = new User(username);
-            if (!u.empty && !u.locked) // user does not exist or is locked out
+            if (!u.empty && !u.locked && u.active) // user does not exist, is locked out, or inactive
                 return PasswordHash.PasswordHash.ValidatePassword(u.salt + password, u.password);
             else
                 return false;
@@ -79,7 +83,6 @@ public class UserService {
     [WebMethod]
     [SoapHeader("sc")]
     public bool? IsUsernameAvailable(string username) {
-        // note: i'm not convinced we need this ... 
         if (sc != null && sc.isValid()) { // soap header credentials
             return !new User(username).empty;
         } else { // soap header credentials failed
