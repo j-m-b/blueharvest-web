@@ -10,6 +10,7 @@ public class Location {
     public double latitude { get; set; }
     public double longitude { get; set; }
     public int altitude { get; set; }
+    public bool empty { get; set; }
 
     public Location() { }
 
@@ -44,7 +45,7 @@ public class Location {
                     this.longitude = Convert.ToDouble(cmd.Parameters["@longitude"].Value);
                     this.altitude = (int)cmd.Parameters["@altitude"].Value;
                 } else { // no result
-                    // what to do??
+                    this.empty = true;
                 }
             }
         }
@@ -78,13 +79,13 @@ public class Location {
                 cmd.Parameters["@altitude"].Direction = System.Data.ParameterDirection.Output;
                 // open and execute
                 c.Open(); cmd.ExecuteNonQuery();
-                if (!Convert.IsDBNull(cmd.Parameters["@id"].Value)) {
+                if (!Convert.IsDBNull(cmd.Parameters["@id"].Value) ) {
                     this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString());
-                    this.latitude = Convert.ToDouble(cmd.Parameters["@latitude"].Value);
-                    this.longitude = Convert.ToDouble(cmd.Parameters["@longitude"].Value);
+                    this.latitude = latitude; //Convert.ToDouble(cmd.Parameters["@latitude"].Value);
+                    this.longitude = longitude; //Convert.ToDouble(cmd.Parameters["@longitude"].Value);
                     this.altitude = (int)cmd.Parameters["@altitude"].Value;
                 } else { // no result
-                    // what to do??
+                    this.empty = true;
                 }
             }
         }

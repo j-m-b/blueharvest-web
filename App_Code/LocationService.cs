@@ -11,7 +11,8 @@ public class LocationService {
     [SoapHeader("sc")]
     public Location GetLocation(Guid id) {
         if (sc != null && sc.isValid()) {
-            return new Location(id);
+            Location l = new Location(id);
+            if (!l.empty) { return l; } else { return null; }
         } else {
             return null;
         }
@@ -21,7 +22,8 @@ public class LocationService {
     [SoapHeader("sc")]
     public Location GetLocationByCoordinates(double latitude, double longitude) {
         if (sc != null && sc.isValid()) {
-            return new Location(latitude, longitude);
+            Location l = new Location(latitude, longitude);
+            if (!l.empty) { return l; } else { return null; }
         } else {
             return null;
         }

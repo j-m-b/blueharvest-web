@@ -11,7 +11,8 @@ public class ImageService {
     [SoapHeader("sc")]
     public Image GetImage(Guid id) {
         if (sc != null && sc.isValid()) {
-            return new Image(id);
+            Image i = new Image(id);
+            if (!i.empty) return i; else return null;
         } else {
             return null;
         }

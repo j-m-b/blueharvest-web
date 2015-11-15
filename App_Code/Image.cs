@@ -8,9 +8,7 @@ public class Image {
     public string uri { get; set; }
     //public int rank { get; set; }
     public string caption { get; set; }
-    // forego empty attribute ... can be determined from 
-    // the state of id or uri which are required for 
-    // instantiation.
+    public bool empty { get; set; }
 
     public Image() { }
 
@@ -36,7 +34,7 @@ public class Image {
                     this.id = id;
                     this.uri = cmd.Parameters["@uri"].Value.ToString(); // new Uri(cmd.Parameters["@uri"].Value.ToString());
                     this.caption = cmd.Parameters["@caption"].Value.ToString();
-                }
+                } else { this.empty = true; }
             }
         }
     }

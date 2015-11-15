@@ -5,8 +5,11 @@ public partial class _Default : System.Web.UI.Page {
         // testing area
         message.Text += "Hello World!";
 
-        Geocache g = new Geocache(Guid.Parse("F68044F4-F146-4DD5-8289-7BA044612357"));
-        message.Text += "<br />" + g.name;
+        //Location l = new Location(5d, 6d);
+        //message.Text += "<br />" + l.empty;
+
+        /*Geocache g = new Geocache(Guid.Parse("F68044F4-F146-4DD5-8289-7BA044612357"));
+        message.Text += "<br />" + g.name;*/
 
         // from aws rds db instance
         //message.Text += "<br />" + DateTime.Now + " aws rds db: " + new User("jamie").email;

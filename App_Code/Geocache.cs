@@ -20,6 +20,7 @@ public class Geocache {
     public Location location { get; set; }
     public Guid logbookid { get; set; }
     public Logbook logbook { get; set; }
+    public bool empty { get; set; }
 
     public Geocache() { }
 
@@ -130,7 +131,7 @@ public class Geocache {
                     this.logbook.id = Guid.Parse(cmd.Parameters["@logbookid"].Value.ToString());
                     this.logbook.datetime = Convert.ToDateTime(cmd.Parameters["@datetime"].Value);
                 } else { // no result
-                    //this.empty = true;
+                    this.empty = true;
                 }
             }
         }

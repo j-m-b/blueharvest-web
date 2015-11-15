@@ -11,7 +11,9 @@ public class GeocacheService {
     [SoapHeader("sc")]
     public Geocache GetGeocache(Guid id) {
         if (sc != null && sc.isValid()) {
-            return new Geocache(id);
+            Geocache g = new Geocache(id);
+            if (!g.empty) return new Geocache(id);
+            else return null;
         } else {
             return null;
         }
