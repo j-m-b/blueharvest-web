@@ -5,6 +5,7 @@ public class Geocache {
 
     public Guid id { get; set; }
     public DateTime anniversary { get; set; }
+    public string code { get; set; }
     public string name { get; set; }
     public string description { get; set; }
     public int difficulty { get; set; }
@@ -37,6 +38,124 @@ public class Geocache {
                 cmd.Parameters["@id"].Value = id;
                 // output parameter(s)
                 // geocache
+                cmd.Parameters.Add("@anniversary", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@anniversary"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@code", System.Data.SqlDbType.NVarChar, 13);
+                cmd.Parameters["@code"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@name"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@description", System.Data.SqlDbType.NVarChar, -1);
+                cmd.Parameters["@description"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@difficulty", System.Data.SqlDbType.Int);
+                cmd.Parameters["@difficulty"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@terrain", System.Data.SqlDbType.Int);
+                cmd.Parameters["@terrain"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@size", System.Data.SqlDbType.Int);
+                cmd.Parameters["@size"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@status", System.Data.SqlDbType.Int);
+                cmd.Parameters["@status"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@type", System.Data.SqlDbType.Int);
+                cmd.Parameters["@type"].Direction = System.Data.ParameterDirection.Output;
+                // user
+                cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@uanniversary", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@uanniversary"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@username", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@username"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@email", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@email"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@active", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@active"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@locked", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@locked"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@roleid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@roleid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@rolename", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@rolename"].Direction = System.Data.ParameterDirection.Output;
+                // location (and address)
+                cmd.Parameters.Add("@locationid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@locationid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@latitude", System.Data.SqlDbType.Decimal, 10);
+                cmd.Parameters["@latitude"].Precision = 10;
+                cmd.Parameters["@latitude"].Scale = 7;
+                cmd.Parameters["@latitude"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@longitude", System.Data.SqlDbType.Decimal, 10);
+                cmd.Parameters["@longitude"].Precision = 10;
+                cmd.Parameters["@longitude"].Scale = 7;
+                cmd.Parameters["@longitude"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@altitude", System.Data.SqlDbType.Int);
+                cmd.Parameters["@altitude"].Direction = System.Data.ParameterDirection.Output;
+                //cmd.Parameters.Add("@addressid", System.Data.SqlDbType.UniqueIdentifier);
+                //cmd.Parameters["@addressid"].Direction = System.Data.ParameterDirection.Output;
+                //cmd.Parameters.Add("@street", System.Data.SqlDbType.NVarChar, 100);
+                //cmd.Parameters["@street"].Direction = System.Data.ParameterDirection.Output;
+                //cmd.Parameters.Add("@city", System.Data.SqlDbType.NVarChar, 100);
+                //cmd.Parameters["@city"].Direction = System.Data.ParameterDirection.Output;
+                //cmd.Parameters.Add("@region", System.Data.SqlDbType.NVarChar, 100);
+                //cmd.Parameters["@region"].Direction = System.Data.ParameterDirection.Output;
+                //cmd.Parameters.Add("@postalcode", System.Data.SqlDbType.NVarChar, 25);
+                //cmd.Parameters["@postalcode"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@logbookid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@logbookid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@datetime", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@datetime"].Direction = System.Data.ParameterDirection.Output;
+                // open and execute
+                c.Open(); cmd.ExecuteNonQuery();
+                if (!Convert.IsDBNull(cmd.Parameters["@anniversary"].Value)) { // any req'ed column
+                    this.id = id;
+                    this.anniversary = Convert.ToDateTime(cmd.Parameters["@anniversary"].Value).ToUniversalTime();
+                    this.code = cmd.Parameters["@code"].Value.ToString();
+                    this.name = cmd.Parameters["@name"].Value.ToString();
+                    this.description = cmd.Parameters["@description"].Value.ToString();
+                    this.difficulty = (int)cmd.Parameters["@difficulty"].Value;
+                    this.terrain = (int)cmd.Parameters["@terrain"].Value;
+                    this.size = (int)cmd.Parameters["@size"].Value;
+                    this.status = (int)cmd.Parameters["@status"].Value;
+                    this.type = (int)cmd.Parameters["@type"].Value;
+                    this.user = new User();
+                    this.user.id = Guid.Parse(cmd.Parameters["@userid"].Value.ToString());
+                    this.user.anniversary = Convert.ToDateTime(cmd.Parameters["@uanniversary"].Value).ToUniversalTime();
+                    this.user.username = cmd.Parameters["@username"].Value.ToString();
+                    this.user.email = cmd.Parameters["@email"].Value.ToString();
+                    this.user.active = Convert.ToBoolean(cmd.Parameters["@active"].Value);
+                    this.user.locked = Convert.ToBoolean(cmd.Parameters["@locked"].Value);
+                    this.user.role = new Role(Guid.Parse(cmd.Parameters["@roleid"].Value.ToString()),
+                        cmd.Parameters["@rolename"].Value.ToString());
+                    this.location = new Location();
+                    this.location.id = Guid.Parse(cmd.Parameters["@locationid"].Value.ToString());
+                    this.location.longitude = Convert.ToDouble(cmd.Parameters["@longitude"].Value);
+                    this.location.altitude = (int)cmd.Parameters["@altitude"].Value;
+                    // Guid.Parse(cmd.Parameters["@addressid"].Value.ToString())
+                    // cmd.Parameters["@street"].Value
+                    // cmd.Parameters["@city"].Value
+                    // cmd.Parameters["@region"].Value
+                    // cmd.Parameters["@postalcode"].Value
+                    this.logbook = new Logbook();
+                    this.logbook.id = Guid.Parse(cmd.Parameters["@logbookid"].Value.ToString());
+                    this.logbook.datetime = Convert.ToDateTime(cmd.Parameters["@datetime"].Value);
+                } else { // no result
+                    this.empty = true;
+                }
+            }
+        }
+    }
+
+    public Geocache(string code) {
+        using (System.Data.SqlClient.SqlConnection c =
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.getGeocacheByCode", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@code", System.Data.SqlDbType.NVarChar, 13);
+                cmd.Parameters["@code"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@code"].Value = code;
+                // output parameter(s)
+                // geocache
+                cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Output;
                 cmd.Parameters.Add("@anniversary", System.Data.SqlDbType.DateTime);
                 cmd.Parameters["@anniversary"].Direction = System.Data.ParameterDirection.Output;
                 cmd.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 50);
@@ -102,6 +221,7 @@ public class Geocache {
                 if (!Convert.IsDBNull(cmd.Parameters["@anniversary"].Value)) { // any req'ed column
                     this.id = id;
                     this.anniversary = Convert.ToDateTime(cmd.Parameters["@anniversary"].Value).ToUniversalTime();
+                    this.code = cmd.Parameters["@code"].Value.ToString();
                     this.name = cmd.Parameters["@name"].Value.ToString();
                     this.description = cmd.Parameters["@description"].Value.ToString();
                     this.difficulty = (int)cmd.Parameters["@difficulty"].Value;
@@ -148,6 +268,9 @@ public class Geocache {
                     // input parameter(s)
                     // id = newid()
                     // anniversary = sysutcdatetime()
+                    cmd.Parameters.Add("@code", System.Data.SqlDbType.NVarChar, 13);
+                    cmd.Parameters["@code"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@code"].Value = g.code;
                     cmd.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 50);
                     cmd.Parameters["@name"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@name"].Value = g.name;
@@ -214,6 +337,9 @@ public class Geocache {
                     // input parameter(s)
                     // id = newid()
                     // anniversary = sysutcdatetime()
+                    cmd.Parameters.Add("@code", System.Data.SqlDbType.NVarChar, 13);
+                    cmd.Parameters["@code"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@code"].Value = g.name;
                     cmd.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 50);
                     cmd.Parameters["@name"].Direction = System.Data.ParameterDirection.Input;
                     cmd.Parameters["@name"].Value = g.name;
@@ -329,6 +455,7 @@ public class Geocaches : System.Collections.ArrayList {
                             Geocache g = new Geocache();
                             g.id = Guid.Parse(r["geocacheid"].ToString());
                             g.anniversary = Convert.ToDateTime(r["anniversary"]);
+                            g.code = r["code"].ToString();
                             g.name = r["name"].ToString();
                             g.description = r["description"].ToString();
                             g.difficulty = Convert.IsDBNull(r["difficulty"]) ? 0 : (int)r["difficulty"];

@@ -5,6 +5,9 @@ public partial class _Default : System.Web.UI.Page {
         // testing area
         message.Text += "Hello World!";
 
+        //Geocache g = new Geocache("BH13GC7");
+        //message.Text += "<br />" + g.name;
+
         //Location l = new Location(5d, 6d);
         //message.Text += "<br />" + l.empty;
 

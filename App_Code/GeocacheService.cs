@@ -21,6 +21,18 @@ public class GeocacheService {
 
     [WebMethod]
     [SoapHeader("sc")]
+    public Geocache GetGeocacheByCode(string code) {
+        if (sc != null && sc.isValid()) {
+            Geocache g = new Geocache(code);
+            if (!g.empty) return new Geocache(code);
+            else return null;
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
     public bool? InsertGeocache(Geocache g) {
         if (sc != null && sc.isValid()) {
             return Geocache.Insert(g);
