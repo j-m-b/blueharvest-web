@@ -240,6 +240,7 @@ public class Geocache {
                         cmd.Parameters["@rolename"].Value.ToString());
                     this.location = new Location();
                     this.location.id = Guid.Parse(cmd.Parameters["@locationid"].Value.ToString());
+                    this.location.latitude = Convert.ToDouble(cmd.Parameters["@latitude"].Value);
                     this.location.longitude = Convert.ToDouble(cmd.Parameters["@longitude"].Value);
                     this.location.altitude = (int)cmd.Parameters["@altitude"].Value;
                     // Guid.Parse(cmd.Parameters["@addressid"].Value.ToString())
