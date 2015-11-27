@@ -10,9 +10,19 @@ public class LogbookService {
     [WebMethod]
     //[System.Xml.Serialization.XmlInclude(typeof(LogbookEntry))] // not sure if we need this
     [SoapHeader("sc")]
-    public LogbookEntries GetLogbook(Guid id) {
+    public LogbookEntries GetLogbookEntries(Guid logbookid) {
         if (sc != null && sc.isValid()) {
-            return new LogbookEntries(id);
+            return new LogbookEntries(logbookid);
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
+    public Logbook GetLogbookWithEntries (Guid id) {
+        if (sc != null && sc.isValid()) {
+            return new Logbook(id);
         } else {
             return null;
         }

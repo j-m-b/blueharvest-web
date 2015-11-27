@@ -4,8 +4,34 @@ public class Logbook {
 
     public Guid id { get; set; }
     public DateTime datetime { get; set; }
+    public LogbookEntries entries { get; set; }
 
     public Logbook() { }
+
+    public Logbook(Guid id) {
+        using (System.Data.SqlClient.SqlConnection c =
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.getLogbook", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter
+                cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@id"].Value = id;
+                // output parameter
+                cmd.Parameters.Add("@datetime", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@datetime"].Direction = System.Data.ParameterDirection.Output;
+                // open and execute
+                c.Open(); cmd.ExecuteNonQuery();
+                if (!Convert.IsDBNull(cmd.Parameters["@datetime"].Value)) { // check a req'd parameter
+                    this.id = id;
+                    this.datetime = Convert.ToDateTime(cmd.Parameters["@datetime"].Value).ToUniversalTime();
+                    this.entries = new LogbookEntries(id); // call another constructor (we could use one stored proc ...)
+                } else { /* something went wrong */ }
+            }
+        }
+    }
 
     public static bool Insert() {
         try {
@@ -83,7 +109,7 @@ public class LogbookEntries : System.Collections.ArrayList {
            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
             using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
-                "blueharvest.dbo.getLogbookEntriesWithUserByLogbookId", c)) {
+                "blueharvest.dbo.getLogbookEntriesByLogbookId", c)) {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 // input parameter(s)
                 cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
