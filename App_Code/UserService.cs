@@ -90,4 +90,24 @@ public class UserService {
         }
     }
 
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? RelateFavoriteGeocache(System.Guid userid, System.Guid geocacheid, bool favorite) {
+        if (sc != null && sc.isValid()) { // soap header credentials
+            return User.relateFavoriteGeocache(userid, geocacheid, favorite);
+        } else { // soap header credentials failed
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? RelateFoundGeocache(System.Guid userid, System.Guid geocacheid, bool found) {
+        if (sc != null && sc.isValid()) { // soap header credentials
+            return User.relateFoundGeocache(userid, geocacheid, found);
+        } else { // soap header credentials failed
+            return null;
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ public class User {
     public bool empty { get; set; } // web service specific
 
     public User() { }
-    
+
     /// <summary>getUserByUsernameAndPassword stored procedure todo: test</summary>
     /// <param name="username"></param>
     /// <param name="password"></param>
@@ -257,6 +257,57 @@ public class User {
             }
             return true;
         } catch { // the update failed somehow
+            return false;
+        }
+    }
+
+    public static bool relateFavoriteGeocache(Guid userid, Guid geocacheid, bool favorite) {
+        String sp = "blueharvest.dbo.insertUserGeocacheFavorite";
+        if (!favorite) sp = "blueharvest.dbo.deleteUserGeocacheFavorite";
+        try {
+            using (System.Data.SqlClient.SqlConnection c =
+               new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+               ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sp, c)) {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    // input parameter(s)
+                    cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                    cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@userid"].Value = userid;
+                    cmd.Parameters.Add("@geocacheid", System.Data.SqlDbType.UniqueIdentifier);
+                    cmd.Parameters["@geocacheid"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@geocacheid"].Value = geocacheid;
+                    c.Open(); cmd.ExecuteNonQuery();  // open and execute
+                }
+            }
+            return true;
+        } catch { // the sp failed somehow
+            return false;
+        }
+    }
+
+    public static bool relateFoundGeocache(Guid userid, Guid geocacheid, bool found) {
+        String sp = "blueharvest.dbo.insertUserGeocacheFound";
+        if (!found) sp = "blueharvest.dbo.deleteUserGeocacheFound";
+        try {
+            using (System.Data.SqlClient.SqlConnection c =
+               new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+               ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sp, c)) {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    // input parameter(s)
+                    // input parameter(s)
+                    cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                    cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@userid"].Value = userid;
+                    cmd.Parameters.Add("@geocacheid", System.Data.SqlDbType.UniqueIdentifier);
+                    cmd.Parameters["@geocacheid"].Direction = System.Data.ParameterDirection.Input;
+                    cmd.Parameters["@geocacheid"].Value = geocacheid;
+                    c.Open(); cmd.ExecuteNonQuery();  // open and execute
+                }
+            }
+            return true;
+        } catch { // the sp failed somehow
             return false;
         }
     }

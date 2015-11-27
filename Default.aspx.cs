@@ -5,8 +5,28 @@ public partial class _Default : System.Web.UI.Page {
         // testing area
         message.Text += "Hello World!";
 
-        //Geocache g = new Geocache("BH13GC7");
-        //message.Text += "<br />" + g.name;
+        /* everything works just fine!
+        // testing favorite and found
+        User u = new User("jamie");
+        Geocache g = new Geocache("BH13GC7");
+        // testing favorite insert
+        //message.Text += "<br />" + global::User.relateFavoriteGeocache(u.id, g.id, true);
+        // testing favorite delete
+        //message.Text += "<br />" + global::User.relateFavoriteGeocache(u.id, g.id, false);
+        // testing favorite list
+        //message.Text += "<br />" + new Geocaches(u.id, Geocaches.type.favorite).Count;
+
+        // testing found insert
+        message.Text += "<br />" +  global::User.relateFoundGeocache(u.id, g.id, true);
+        // testing found delete
+        //message.Text += "<br />" + global::User.relateFoundGeocache(u.id, g.id, false);
+        // testing found list
+        message.Text += "<br />" + new Geocaches(u.id, Geocaches.type.found).Count;
+        */
+
+        /* Geocache g = new Geocache("BH13GC7");
+         message.Text += "<br />" + g.name;
+         message.Text += "<br />" + g.location.latitude.ToString();*/
 
         //Location l = new Location(5d, 6d);
         //message.Text += "<br />" + l.empty;

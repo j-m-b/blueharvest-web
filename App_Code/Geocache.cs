@@ -219,7 +219,7 @@ public class Geocache {
                 // open and execute
                 c.Open(); cmd.ExecuteNonQuery();
                 if (!Convert.IsDBNull(cmd.Parameters["@anniversary"].Value)) { // any req'ed column
-                    this.id = id;
+                    this.id = Guid.Parse(cmd.Parameters["@id"].Value.ToString()); ;
                     this.anniversary = Convert.ToDateTime(cmd.Parameters["@anniversary"].Value).ToUniversalTime();
                     this.code = cmd.Parameters["@code"].Value.ToString();
                     this.name = cmd.Parameters["@name"].Value.ToString();
@@ -398,6 +398,8 @@ public class Geocache {
 
 public class Geocaches : System.Collections.ArrayList {
 
+    public enum type { favorite, found };
+
     /// <summary>getGeocachesWithinDistance stored procedure</summary>
     /// <param name="minlatrad">minimum latitude in radians</param>
     /// <param name="maxlatrad">maximum latitude in radians</param>
@@ -449,6 +451,68 @@ public class Geocaches : System.Collections.ArrayList {
                 cmd.Parameters["@distance"].Scale = 5;
                 cmd.Parameters["@distance"].Direction = System.Data.ParameterDirection.Input;
                 cmd.Parameters["@distance"].Value = distance;
+                c.Open(); // open connection
+                using (System.Data.SqlClient.SqlDataReader r = cmd.ExecuteReader()) {
+                    if (r.HasRows) {
+                        while (r.Read()) {
+                            Geocache g = new Geocache();
+                            g.id = Guid.Parse(r["geocacheid"].ToString());
+                            g.anniversary = Convert.ToDateTime(r["anniversary"]);
+                            g.code = r["code"].ToString();
+                            g.name = r["name"].ToString();
+                            g.description = r["description"].ToString();
+                            g.difficulty = Convert.IsDBNull(r["difficulty"]) ? 0 : (int)r["difficulty"];
+                            g.terrain = Convert.IsDBNull(r["terrain"]) ? 0 : (int)r["terrain"];
+                            g.size = Convert.IsDBNull(r["size"]) ? 0 : (int)r["size"];
+                            g.status = Convert.IsDBNull(r["status"]) ? 0 : (int)r["status"];
+                            g.type = Convert.IsDBNull(r["type"]) ? 0 : (int)r["type"];
+                            // location
+                            g.location = new Location();
+                            g.location.id = Guid.Parse(r["locationid"].ToString());
+                            g.location.latitude = Convert.ToDouble(r["latitude"]);
+                            g.location.longitude = Convert.ToDouble(r["longitude"]);
+                            g.location.altitude = Convert.IsDBNull(r["altitude"]) ? 0 : (int)r["altitude"];
+                            // user
+                            g.user = new User();
+                            g.user.id = Guid.Parse(r["userid"].ToString());
+                            g.user.username = r["username"].ToString();
+                            g.user.email = r["email"].ToString();
+                            // user role
+                            g.user.role = new Role();
+                            g.user.role.id = Guid.Parse(r["roleid"].ToString());
+                            g.user.role.name = r["rolename"].ToString();
+                            // logbook
+                            g.logbook = new Logbook();
+                            g.logbook.id = Guid.Parse(r["logbookid"].ToString());
+                            Add(g); // add to the array
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public Geocaches(Guid userid, type type) {
+        String sp;
+        switch (type) {
+            case type.favorite:
+                sp = "blueharvest.dbo.getFavoriteGeocaches";
+                break;
+            case type.found:
+                sp = "blueharvest.dbo.getFoundGeocaches";
+                break;
+            default:
+                return; // nothing to see here!
+        }
+        using (System.Data.SqlClient.SqlConnection c =
+         new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+         ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(sp, c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@userid"].Value = userid;
                 c.Open(); // open connection
                 using (System.Data.SqlClient.SqlDataReader r = cmd.ExecuteReader()) {
                     if (r.HasRows) {

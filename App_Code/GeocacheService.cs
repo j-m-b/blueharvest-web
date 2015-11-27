@@ -93,4 +93,24 @@ public class GeocacheService {
         }
     }
 
+    [WebMethod]
+    [SoapHeader("sc")]
+    public Geocaches GetFavoriteGeocaches(Guid userid) {
+        if (sc != null && sc.isValid()) {
+            return new Geocaches(userid, Geocaches.type.favorite);
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
+    public Geocaches GetFoundGeocaches(Guid userid) {
+        if (sc != null && sc.isValid()) {
+            return new Geocaches(userid, Geocaches.type.found);
+        } else {
+            return null;
+        }
+    }
+
 }
