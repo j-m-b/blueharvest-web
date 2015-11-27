@@ -41,6 +41,26 @@ public class GeocacheService {
         }
     }
 
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? IsFavorite(Guid geocacheid, Guid userid) {
+        if (sc != null && sc.isValid()) {
+            return Geocache.IsFavorite(geocacheid, userid);
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
+    [SoapHeader("sc")]
+    public bool? IsFound(Guid geocacheid, Guid userid) {
+        if (sc != null && sc.isValid()) {
+            return Geocache.IsFound(geocacheid, userid);
+        } else {
+            return null;
+        }
+    }
+
     /*
     [WebMethod]
     [SoapHeader("sc")]

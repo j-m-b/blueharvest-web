@@ -394,6 +394,60 @@ public class Geocache {
         return false;
     }
 
+    public static bool? IsFavorite(Guid geocacheid, Guid userid) {
+        using (System.Data.SqlClient.SqlConnection c =
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.isGeocacheFavorite", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@geocacheid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@geocacheid"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@geocacheid"].Value = geocacheid;
+                cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@userid"].Value = userid;
+                // output parameter
+                cmd.Parameters.Add("@result", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@result"].Direction = System.Data.ParameterDirection.Output;
+                c.Open(); cmd.ExecuteNonQuery();  // open and execute
+                if (!Convert.IsDBNull(cmd.Parameters["@result"].Value)) { // any req'ed column
+                    return Convert.ToBoolean(cmd.Parameters["@result"].Value);
+                } else { // no result
+                    return null;
+                }
+            }
+        }
+    }
+
+    public static bool? IsFound(Guid geocacheid, Guid userid) {
+        using (System.Data.SqlClient.SqlConnection c =
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.isGeocacheFound", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter(s)
+                cmd.Parameters.Add("@geocacheid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@geocacheid"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@geocacheid"].Value = geocacheid;
+                cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@userid"].Value = userid;
+                // output parameter
+                cmd.Parameters.Add("@result", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@result"].Direction = System.Data.ParameterDirection.Output;
+                c.Open(); cmd.ExecuteNonQuery();  // open and execute
+                if (!Convert.IsDBNull(cmd.Parameters["@result"].Value)) { // any req'ed column
+                    return Convert.ToBoolean(cmd.Parameters["@result"].Value);
+                } else { // no result
+                    return null;
+                }
+            }
+        }
+    }
+
 }
 
 public class Geocaches : System.Collections.ArrayList {

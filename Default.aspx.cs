@@ -5,6 +5,15 @@ public partial class _Default : System.Web.UI.Page {
         // testing area
         message.Text += "Hello World!";
 
+        User u = new User("jamie");
+        Geocache g = new Geocache("BH13GC7");
+
+        message.Text += "<br />" + u.id;
+        message.Text += "<br />" + g.id;
+
+        message.Text += "<br />" + Geocache.IsFavorite(g.id, u.id);
+        message.Text += "<br />" + Geocache.IsFound(g.id, u.id);
+
         /* everything works just fine!
         // testing favorite and found
         User u = new User("jamie");
