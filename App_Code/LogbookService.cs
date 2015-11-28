@@ -8,6 +8,16 @@ public class LogbookService {
     public ServiceCredentials sc;
 
     [WebMethod]
+    [SoapHeader("sc")]
+    public LogbookEntry GetLogbookEntry (Guid id) {
+        if (sc != null && sc.isValid()) {
+            return new LogbookEntry(id);
+        } else {
+            return null;
+        }
+    }
+
+    [WebMethod]
     //[System.Xml.Serialization.XmlInclude(typeof(LogbookEntry))] // not sure if we need this
     [SoapHeader("sc")]
     public LogbookEntries GetLogbookEntries(Guid logbookid) {

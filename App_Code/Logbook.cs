@@ -68,6 +68,59 @@ public class LogbookEntry {
 
     public LogbookEntry() { }
 
+    public LogbookEntry(Guid id) {
+        using (System.Data.SqlClient.SqlConnection c =
+            new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.
+            ConnectionStrings["blueharvest-rds"].ConnectionString)) {
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
+                "blueharvest.dbo.getLogbookEntry", c)) {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                // input parameter
+                cmd.Parameters.Add("@id", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@id"].Direction = System.Data.ParameterDirection.Input;
+                cmd.Parameters["@id"].Value = id;
+                // output parameter(s)
+                cmd.Parameters.Add("@datetime", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@datetime"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@title", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@title"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@text", System.Data.SqlDbType.NVarChar, -1);
+                cmd.Parameters["@text"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@userid", System.Data.SqlDbType.UniqueIdentifier);
+                cmd.Parameters["@userid"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@uanniversary", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@uanniversary"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@username", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@username"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@email", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@email"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@active", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@active"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@locked", System.Data.SqlDbType.Bit);
+                cmd.Parameters["@locked"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@rolename", System.Data.SqlDbType.NVarChar, 50);
+                cmd.Parameters["@rolename"].Direction = System.Data.ParameterDirection.Output;
+                cmd.Parameters.Add("@uri", System.Data.SqlDbType.NVarChar, 255);
+                cmd.Parameters["@uri"].Direction = System.Data.ParameterDirection.Output;
+                // open and execute
+                c.Open(); cmd.ExecuteNonQuery();
+                if (!Convert.IsDBNull(cmd.Parameters["@datetime"].Value)) { // a req'd parameter
+                    this.id = id;
+                    this.datetime = Convert.ToDateTime(cmd.Parameters["@datetime"].Value).ToUniversalTime();
+                    this.title = cmd.Parameters["@datetime"].Value.ToString();
+                    this.text = cmd.Parameters["@text"].Value.ToString();
+                    //Guid.Parse(cmd.Parameters["@userid"].Value.ToString());
+                    //Convert.ToDateTime(cmd.Parameters["@uanniversary"].Value).ToUniversalTime();
+                    this.username = cmd.Parameters["@username"].Value.ToString();
+                    //cmd.Parameters["@email"].Value.ToString();
+                    //Convert.ToBoolean(cmd.Parameters["@active"].Value);
+                    //Convert.ToBoolean(cmd.Parameters["@locked"].Value);
+                    this.uri = cmd.Parameters["@uri"].Value.ToString(); // new Uri(cmd.Parameters["@uri"].Value.ToString());
+                } else { /* something went wrong */ }
+            }
+        }
+    }
+
     public static bool Insert(LogbookEntry l, Guid userid, Guid logbookid) {
         try {
             using (System.Data.SqlClient.SqlConnection c =

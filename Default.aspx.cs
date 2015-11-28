@@ -5,6 +5,9 @@ public partial class _Default : System.Web.UI.Page {
         // testing area
         message.Text += "Hello World!";
 
+        /*LogbookEntry l = new LogbookEntry(Guid.Parse("3A702A3D-367D-40F0-976F-65D3479786BA"));
+        message.Text += "<br />" + l.title;*/
+
         /*User u = new User("username");
         Geocache g = new Geocache("BH13GC7");
 
